@@ -1,0 +1,1 @@
+// I have used functional helpers to help test the signup page. Refer to nesto_takehome_kartik_muchandi/helpers/signup/signup.ts

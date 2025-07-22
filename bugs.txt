@@ -1,0 +1,9 @@
+1. British columbia in the province dropdown has a hyphen. 
+2. The signup link on the login page. The <a> tag is to the entire text, including "Don't have an account?", which is incorrect. Should only be there for "Sign up"
+3. If a browser is not closed and a new user is registered, the landing page is not the /getaquote/ page, instead it is /application/selection and the system wrongly refers to the user as an existing user. 
+4. Mortgage renewal card on the /getaquote/ page. Renewal R is Capital which is Inconsistant with other cards. 
+5. A User can sign up without agreeing to terms. 
+6. After clicking Logout, page does not navigate to Login page. 
+7. Toast message for Duplicate signup. "this account already exists. please log in." Incorrect capitalization of sentence. Should be "this account already exists. Please log in"
+8. 
+

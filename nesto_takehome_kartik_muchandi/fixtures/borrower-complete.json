@@ -1,0 +1,9 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "+12345678901",
+  "email": "john.doe@domain.com",
+  "province": "Alberta",
+  "agreeToTerms": true,
+  "password": "Sup3r5ecre7@"
+} 
