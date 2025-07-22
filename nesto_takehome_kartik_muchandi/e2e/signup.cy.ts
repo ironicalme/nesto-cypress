@@ -1,9 +1,9 @@
 import { generateBorrower } from '../support/utils';
 import { LoginPage } from '../pages/login-page';
-import { signupFlow } from '../helpers/signup/signup';
+import { expectAccountToMatch, signupFlow } from '../helpers/signup/signup';
 import { GetAQuotePage } from '../pages/get-a-quote';
 import { LanguageHelper } from '../helpers/language-helper';
-import { t, TranslationKey } from '../support/translations';
+import { t } from '../support/translations';
 
 describe('Sign Up Flow', () => {
     beforeEach(() => {
@@ -73,7 +73,7 @@ describe('Sign Up Flow', () => {
         cy.get('[data-test-id="form-error-passwordConfirm"]').should('be.visible').should('have.text', t('required')).should('have.css', 'color', 'rgb(249, 66, 58)');
     });
 
-    it.only('should throw error when using invalid email', () => {
+    it('should throw error when using invalid email', () => {
         const borrower = generateBorrower();
         borrower.email = 'abc#domain.com';
         signupFlow(borrower);
@@ -123,6 +123,37 @@ describe('Sign Up Flow', () => {
         cy.get('[data-test-id="createYourAccount"]').click();
         cy.get('[data-test-id="toasts_duplicateAccount_title"]').should('be.visible').should('have.text', t('accountAlreadyExists'));
         cy.get('[data-test-id="toasts_duplicateAccount_message"]').should('be.visible').should('have.text', t('thisAccountAlreadyExistsPleaseLogIn'));
+    });
+
+    it('should throw error when using incomplete phone number', () => {
+        const borrower = generateBorrower();
+        borrower.phoneNumber = '12345678';
+        signupFlow(borrower);
+        cy.get('[data-test-id="createYourAccount"]').click();
+        cy.get('[data-test-id="form-error-phone"]').should('be.visible').should('have.text', t('invalidPhoneNumber')).should('have.css', 'color', 'rgb(249, 66, 58)');
+    });
+    
+    it('API: should return 201 when signing up a new borrower successfully', () => {
+        const borrower = generateBorrower();
+        borrower.province = "Alberta"
+        cy.log(JSON.stringify(borrower));
+
+        signupFlow(borrower);
+        cy.intercept('POST', '/api/accounts').as('newBorrower');
+        cy.get('[data-test-id="createYourAccount"]').click();
+        // cy.wait('@newBorrower').then(console.log)
+        cy.wait('@newBorrower').its('response').then(response => {
+            expect(response.statusCode).to.eq(201);
+            expectAccountToMatch(response.body.account, borrower);
+        });
+        // cy.get('@newBorrower').its('response.body.account').then(response => {
+        //     cy.log(JSON.stringify(response));
+        // });
+        // cy.wait('@newBorrower').should('have.property', 'response.statusCode', 201);
+        // cy.get('@newBorrower').then(response => {
+        //     cy.log(JSON.stringify(response));
+        // });
+
     });
 
 }); 

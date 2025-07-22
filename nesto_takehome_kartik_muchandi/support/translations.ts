@@ -25,6 +25,10 @@ export const TRANSLATIONS = {
     en: 'Invalid email address',
     fr: 'Courriel invalide',
   },
+  invalidPhoneNumber: { // Assumption: The phone number is invalid if it is less than 10 digits
+    en: 'Invalid phone number',
+    fr: 'Numéro de téléphone invalide',
+  },
   accountAlreadyExists: {
     en: 'Account already exists', 
     fr: 'Le compte existe déjà'

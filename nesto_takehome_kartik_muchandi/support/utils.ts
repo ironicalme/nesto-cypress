@@ -65,3 +65,27 @@ export function generateBorrower(overrides: Partial<Borrower> = {}): Borrower {
     agreeToTerms: overrides.agreeToTerms ?? true,
   };
 }
+
+export function getPhoneNumberWithDashes(phoneNumber: string) {
+  return `${phoneNumber.substring(0,3)}-${phoneNumber.substring(3,6)}-${phoneNumber.substring(6,10)}`;
+}
+
+export function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getRegionFromProvince(province: string) {
+  const provinceMap = {
+    'Alberta': 'AB',
+    'British Columbia': 'BC',
+    'Manitoba': 'MB',
+    'New Brunswick': 'NB',
+    'Newfoundland and Labrador': 'NL',
+    'Nova Scotia': 'NS',
+    'Ontario': 'ON',
+    'Prince Edward Island': 'PE',
+    'Quebec': 'QC',
+    'Saskatchewan': 'SK',
+  }
+  return provinceMap[province as keyof typeof provinceMap];
+}
