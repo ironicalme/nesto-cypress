@@ -12,6 +12,7 @@ describe('Sign Up Flow', () => {
         loginPage.signupLink().click(); // Demonstrating POM method.
     });
     afterEach(() => {
+        // I added these because i am running the tests, not isolated. because i wanted to see realtime where they were failing on the runner. 
         cy.clearAllCookies();
         cy.clearLocalStorage();
         cy.clearAllSessionStorage();
@@ -22,12 +23,10 @@ describe('Sign Up Flow', () => {
         // Set the language for this test
         LanguageHelper.setLanguage(language);
         cy.log(`Running test with language: ${language}`);
+        
         const borrower = generateBorrower();
         
-        // cy.log(JSON.stringify(borrower));
-
         const toggleText = language === 'fr' ? 'FR' : 'EN';
-
         cy.get('[data-test-id="toggle-language"]').then($toggle => {
             if ($toggle.text().includes(toggleText)) {
                 cy.wrap($toggle).click();
@@ -42,7 +41,7 @@ describe('Sign Up Flow', () => {
         getAQuotePage.newMortgageContainer().should('be.visible');
         getAQuotePage.refinanceMyMortgageContainer().should('be.visible');
         getAQuotePage.mortgageRenewalContainer().should('be.visible');
-        
+
         getAQuotePage.title().should('have.text', t('howCanWeHelpYouWithYourMortgage'));
         getAQuotePage.newMortgageTitle().should('have.text', t('newMortgage'));
         getAQuotePage.newMortgageDescription().should('have.text', t('iNeedAPreQualification'));
@@ -136,24 +135,14 @@ describe('Sign Up Flow', () => {
     it('API: should return 201 when signing up a new borrower successfully', () => {
         const borrower = generateBorrower();
         borrower.province = "Alberta"
-        cy.log(JSON.stringify(borrower));
 
         signupFlow(borrower);
         cy.intercept('POST', '/api/accounts').as('newBorrower');
         cy.get('[data-test-id="createYourAccount"]').click();
-        // cy.wait('@newBorrower').then(console.log)
         cy.wait('@newBorrower').its('response').then(response => {
             expect(response.statusCode).to.eq(201);
             expectAccountToMatch(response.body.account, borrower);
         });
-        // cy.get('@newBorrower').its('response.body.account').then(response => {
-        //     cy.log(JSON.stringify(response));
-        // });
-        // cy.wait('@newBorrower').should('have.property', 'response.statusCode', 201);
-        // cy.get('@newBorrower').then(response => {
-        //     cy.log(JSON.stringify(response));
-        // });
-
     });
 
 }); 

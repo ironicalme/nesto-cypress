@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { LanguageHelper } from '../helpers/language-helper';
 import { t } from '../support/translations';
 
-// Borrower interface
 export interface Borrower {
   firstName: string;
   lastName: string;
@@ -30,7 +28,6 @@ function getRandomProvince() {
   return CANADIAN_PROVINCES[Math.floor(Math.random() * CANADIAN_PROVINCES.length)];
 }
 
-// Helper function to get province name in current language
 export function getProvinceInCurrentLanguage(province: string): string {
   return t(province as any);
 }

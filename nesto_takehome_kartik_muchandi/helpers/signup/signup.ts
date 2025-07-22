@@ -1,5 +1,3 @@
-// This is a functional helper. Instead of using POMs, if the app has very well written data-test-ids, we can directly use functional helpers and skip a layer of abstraction. 
-
 import { 
     Borrower, 
     capitalizeFirstLetter, 
@@ -8,6 +6,7 @@ import {
 } from "../../support/utils";
 import { selectDropdownOption } from '../common/dropdown';
 
+// This is a functional helper. Instead of using POMs, if the app has well written components with data-test-ids, we can directly use functional helpers and skip a layer of abstraction. 
 export async function signupFlow(borrower: Borrower) {
     
     cy.get('[data-test-id="firstName"]').type(borrower.firstName);
@@ -26,6 +25,7 @@ export async function signupFlow(borrower: Borrower) {
     }
 }
 
+// This functional helper collates all assertion. It helps maintain tests, since we only need to change 1 function instead of multiple tests incase things changes.
 export function expectAccountToMatch(responseAccount: any, borrower: Borrower) {
     expect(responseAccount).to.deep.include({
         email: borrower.email,

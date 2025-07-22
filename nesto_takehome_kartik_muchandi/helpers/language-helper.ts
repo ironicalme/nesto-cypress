@@ -1,6 +1,5 @@
 export type Language = 'en' | 'fr';
 
-// Simple language helper
 export class LanguageHelper {
   private static currentLanguage: Language = 'en';
 

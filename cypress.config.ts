@@ -22,7 +22,7 @@ export default defineConfig({
   responseTimeout: 10000,
   numTestsKeptInMemory: 0,
   retries: {
-    runMode: 2,
+    runMode: 1,
     openMode: 0,
   },
 }); 
