@@ -1,9 +1,9 @@
 import { generateBorrower } from '../support/utils';
 import { LoginPage } from '../pages/login-page';
-import { signupFlow } from '../helpers/signup/signup';
+import { expectAccountToMatch, signupFlow } from '../helpers/signup/signup';
 import { GetAQuotePage } from '../pages/get-a-quote';
 import { LanguageHelper } from '../helpers/language-helper';
-import { t, TranslationKey } from '../support/translations';
+import { t } from '../support/translations';
 
 describe('Sign Up Flow', () => {
     beforeEach(() => {
@@ -12,6 +12,7 @@ describe('Sign Up Flow', () => {
         loginPage.signupLink().click(); // Demonstrating POM method.
     });
     afterEach(() => {
+        // I added these because i am running the tests, not isolated. because i wanted to see realtime where they were failing on the runner. 
         cy.clearAllCookies();
         cy.clearLocalStorage();
         cy.clearAllSessionStorage();
@@ -22,12 +23,10 @@ describe('Sign Up Flow', () => {
         // Set the language for this test
         LanguageHelper.setLanguage(language);
         cy.log(`Running test with language: ${language}`);
+        
         const borrower = generateBorrower();
         
-        // cy.log(JSON.stringify(borrower));
-
         const toggleText = language === 'fr' ? 'FR' : 'EN';
-
         cy.get('[data-test-id="toggle-language"]').then($toggle => {
             if ($toggle.text().includes(toggleText)) {
                 cy.wrap($toggle).click();
@@ -42,7 +41,7 @@ describe('Sign Up Flow', () => {
         getAQuotePage.newMortgageContainer().should('be.visible');
         getAQuotePage.refinanceMyMortgageContainer().should('be.visible');
         getAQuotePage.mortgageRenewalContainer().should('be.visible');
-        
+
         getAQuotePage.title().should('have.text', t('howCanWeHelpYouWithYourMortgage'));
         getAQuotePage.newMortgageTitle().should('have.text', t('newMortgage'));
         getAQuotePage.newMortgageDescription().should('have.text', t('iNeedAPreQualification'));
@@ -73,7 +72,7 @@ describe('Sign Up Flow', () => {
         cy.get('[data-test-id="form-error-passwordConfirm"]').should('be.visible').should('have.text', t('required')).should('have.css', 'color', 'rgb(249, 66, 58)');
     });
 
-    it.only('should throw error when using invalid email', () => {
+    it('should throw error when using invalid email', () => {
         const borrower = generateBorrower();
         borrower.email = 'abc#domain.com';
         signupFlow(borrower);
@@ -123,6 +122,27 @@ describe('Sign Up Flow', () => {
         cy.get('[data-test-id="createYourAccount"]').click();
         cy.get('[data-test-id="toasts_duplicateAccount_title"]').should('be.visible').should('have.text', t('accountAlreadyExists'));
         cy.get('[data-test-id="toasts_duplicateAccount_message"]').should('be.visible').should('have.text', t('thisAccountAlreadyExistsPleaseLogIn'));
+    });
+
+    it('should throw error when using incomplete phone number', () => {
+        const borrower = generateBorrower();
+        borrower.phoneNumber = '12345678';
+        signupFlow(borrower);
+        cy.get('[data-test-id="createYourAccount"]').click();
+        cy.get('[data-test-id="form-error-phone"]').should('be.visible').should('have.text', t('invalidPhoneNumber')).should('have.css', 'color', 'rgb(249, 66, 58)');
+    });
+    
+    it('API: should return 201 when signing up a new borrower successfully', () => {
+        const borrower = generateBorrower();
+        borrower.province = "Alberta"
+
+        signupFlow(borrower);
+        cy.intercept('POST', '/api/accounts').as('newBorrower');
+        cy.get('[data-test-id="createYourAccount"]').click();
+        cy.wait('@newBorrower').its('response').then(response => {
+            expect(response.statusCode).to.eq(201);
+            expectAccountToMatch(response.body.account, borrower);
+        });
     });
 
 }); 

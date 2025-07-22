@@ -11,11 +11,11 @@ export function selectDropdownOption(options: DropdownOptions) {
     // Click on the dropdown to open it
     cy.get(selector).click();
     
-    // Optional typing step
+    // Optional typing step with optional delay
     if (typeOption) {
         cy.get(selector).type(dropdown_option, { delay: typeDelay });
     }
     
-    // Click on the option containing the specified text
+    // Click on the option containing the specified text.
     cy.get('[id^="react-select-province-option"]').contains(dropdown_option).click({force: true});
 }

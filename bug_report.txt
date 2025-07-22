@@ -5,5 +5,4 @@
 5. A User can sign up without agreeing to terms. 
 6. After clicking Logout, page does not navigate to Login page. 
 7. Toast message for Duplicate signup. "this account already exists. please log in." Incorrect capitalization of sentence. Should be "this account already exists. Please log in"
-8. 
-
+8. Invalid phone number (Phone numbers less than 10 digits) are not raising validation errors. 

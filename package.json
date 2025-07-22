@@ -5,6 +5,8 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "cy:run-test-chrome": "cypress run --spec 'nesto_takehome_kartik_muchandi/e2e/**/*.cy.ts' --browser chrome",
+    "cy:run-test-firefox": "cypress run --spec 'nesto_takehome_kartik_muchandi/e2e/**/*.cy.ts' --browser firefox"
   }
 }
